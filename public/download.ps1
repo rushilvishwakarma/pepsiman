@@ -4,7 +4,18 @@
 
 # Configuration
 $BaseUrl = if ($env:NOTEBOOKS_URL) { $env:NOTEBOOKS_URL } else { "https://lmaos.vercel.app/notebooks" }
-$OutputDir = "downloaded-notebooks"
+
+# Prefer the user's Downloads folder so running the script via the one-liner
+# (e.g. `iwr -useb ... | iex`) doesn't save files into a transient working
+# directory. Falls back to a local `downloaded-notebooks` folder if $env:USERPROFILE
+# isn't available.
+if ($env:USERPROFILE) {
+    # Save directly into the user's Downloads folder (no subfolder fallback)
+    $OutputDir = Join-Path $env:USERPROFILE 'Downloads'
+} else {
+    Write-Host "ERROR: Cannot determine user Downloads folder because USERPROFILE is not set." -ForegroundColor Red
+    exit 1
+}
 
 # Notebook list with titles
 $Notebooks = @(
