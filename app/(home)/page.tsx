@@ -4,24 +4,17 @@ import Link from 'next/link';
 import { FileText, ExternalLink, Info } from 'lucide-react';
 
 // Function to open notebook in Colab
-async function openInColab(notebookName: string) {
-  try {
-    // Fetch the notebook file
-    const response = await fetch(`/notebooks/${notebookName}.ipynb`);
-    const notebookData = await response.json();
-    
-    // Convert to base64
-    const notebookJson = JSON.stringify(notebookData);
-    const base64Notebook = btoa(unescape(encodeURIComponent(notebookJson)));
-    
-    // Open using data URI
-    const colabUrl = `https://colab.research.google.com/notebook#create=true&notebook=${base64Notebook}`;
-    window.open(colabUrl, '_blank');
-  } catch (error) {
-    console.error('Error opening notebook:', error);
-    // Fallback: download the notebook
-    window.open(`/notebooks/${notebookName}.ipynb`, '_blank');
-  }
+function openInColab(notebookName: string) {
+  // GitHub repository configuration
+  const GITHUB_USERNAME = 'rushilvishwakarma';
+  const GITHUB_REPO = 'pepsiman';
+  const GITHUB_BRANCH = 'main'; // or 'master' - check your default branch
+  
+  // Construct the Colab URL with GitHub path
+  const colabUrl = `https://colab.research.google.com/github/${GITHUB_USERNAME}/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/public/notebooks/${notebookName}.ipynb`;
+  
+  // Open in new tab
+  window.open(colabUrl, '_blank');
 }
 
 export default function HomePage() {
